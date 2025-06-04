@@ -1,5 +1,11 @@
+"use client";
+
 import { Button } from "@heroui/react";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { auth } from "@/lib/firebase";
+import { useState } from "react";
 import Link from "next/link";
+import toast from "react-hot-toast";
 
 
 export default function Page() {
@@ -42,13 +48,33 @@ export default function Page() {
                 </Link>
               </div>
               <hr />
-              <button
-                className="w-full bg-gray-200 text-gray-800 py-2 px-4 rounded hover:bg-gray-300 transition-colors duration-200 font-medium"
-              >
-                Sign in with Google
-              </button>
+              <SignInWithGoogleComponent />
             </div>   
           </section>    
         </main>
     );
 }    
+
+function SignInWithGoogleComponent() {
+  const [isLoading, setIsLoading] = useState(false);
+  const handleLogin = async () => {
+    setIsLoading(true);
+
+    try {
+      const user = await signInWithPopup(auth, new GoogleAuthProvider());
+    } catch (error) {
+      toast.error(error?.message);
+    }
+    setIsLoading(false);
+};
+  return (
+    <Button 
+      isLoading={isLoading}
+      disabled={isLoading}
+      className="w-full bg-gray-200 text-gray-800 py-2 px-4 rounded hover:bg-gray-300 transition-colors duration-200 font-medium"
+      onClick={handleLogin}
+    >
+      Sign in with Google
+    </Button>
+  );
+}
