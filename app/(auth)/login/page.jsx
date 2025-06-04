@@ -3,12 +3,23 @@
 import { Button } from "@heroui/react";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth } from "@/lib/firebase";
-import { useState } from "react";
+import { use, useEffect, useState } from "react";
 import Link from "next/link";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/contexts/AuthContext";
 
 
 export default function Page() {
+  const { user } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (user) {
+      router.push("/dashboard");
+    }
+  }, [user]);
+  
     return (
         <main className="w-full flex justify-center items-center bg-gray-300 md:p-24 p-10 min-h-screen">
           <section className="flex flex-col gap-3">
